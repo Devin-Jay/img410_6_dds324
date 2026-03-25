@@ -99,6 +99,12 @@ bool readProperty(FILE *file, char *property, Scene *scene, bool isLight)
         fscanf(file, "%f", &scene->objects[scene->objectNum].reflection);
         return true;
     }
+    else if (strcmp(property, "texture:") == 0)
+    {
+        // read texture value
+        fscanf(file, " \"%64[^\"]\" ", scene->objects[scene->objectNum].texture);
+        return true;
+    }
 
     return false; // invalid property ; object found
 }

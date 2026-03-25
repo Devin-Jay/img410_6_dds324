@@ -23,6 +23,7 @@ typedef struct
     Vector3 color;
     Vector3 specular;
     float reflection;
+    char texture[64];
 } Object;
 
 typedef struct
