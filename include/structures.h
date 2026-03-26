@@ -23,7 +23,8 @@ typedef struct
     Vector3 color;
     Vector3 specular;
     float reflection;
-    char texture[64];
+    char textureFile[64];
+    PPMImage*texture;
 } Object;
 
 typedef struct

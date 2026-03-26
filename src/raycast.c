@@ -102,7 +102,9 @@ bool readProperty(FILE *file, char *property, Scene *scene, bool isLight)
     else if (strcmp(property, "texture:") == 0)
     {
         // read texture value
-        fscanf(file, " \"%64[^\"]\" ", scene->objects[scene->objectNum].texture);
+        fscanf(file, " \"%64[^\"]\" ", scene->objects[scene->objectNum].textureFile);
+
+        scene->objects[scene->objectNum].texture = readInputPPMFile(scene->objects[scene->objectNum].textureFile);
         return true;
     }
 

@@ -3,6 +3,7 @@
 #include <stddef.h>
 #include <stdint.h>
 #include <stdlib.h>
+#include <string.h>
 
 typedef struct
 {
@@ -13,3 +14,5 @@ typedef struct
 
 // function declarations
 void writeOutputPPMFile(char *filename, PPMImage* img);
+PPMImage* readInputPPMFile(char *filename);
+void skip_comments(FILE *fh);
