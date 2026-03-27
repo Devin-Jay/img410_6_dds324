@@ -1,4 +1,4 @@
-# img410_3_dds324
+# img410_6_dds324
 
 # Authors
 Devin Jay San Nicolas
@@ -16,6 +16,8 @@ raycast.c contains functions to read input scene and raycast.
 raycast.c also utilizes past projects to do vector3 math.
 
 raycast.c now implements lighting and shadows when calculating a pixel's color.
+
+raycast.c now captures a sphere's texture file, loads it, and renders the image with the sphere texture.
 
 structures.h contains various datatypes created.
 
