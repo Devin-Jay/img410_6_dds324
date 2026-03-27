@@ -438,6 +438,31 @@ Vector3 shoot(Scene *scene, Vector3 rayOrigin, Vector3 rayDir, int depth)
     // initialize final color
     Vector3 finalColor = {0.0f, 0.0f, 0.0f};
 
+    // Determine base diffuse color (either object color or texture sample)
+    Vector3 baseColor = obj.color;
+
+    // If sphere has a texture, compute UV and sample it
+    if (obj.type == SPHERE && obj.texture != NULL)
+    {
+        // Vector from sphere center to hit point
+        Vector3 p = v3_subtract(intersectionPoint, obj.pos);
+        p = v3_normalize(p);
+
+        // Compute spherical UV coordinates
+        float u = atan2f(p.z, p.x) / (2.0f * M_PI) + 0.5f;
+        float v = 0.5f - (asinf(p.y) / M_PI);
+
+        // Convert UV to texture pixel coordinates
+        int tx = (int)(u * obj.texture->width)  % obj.texture->width;
+        int ty = (int)(v * obj.texture->height) % obj.texture->height;
+
+        int idx = 3 * (ty * obj.texture->width + tx);
+
+        baseColor.x = obj.texture->pixels[idx]     / 255.0f;
+        baseColor.y = obj.texture->pixels[idx + 1] / 255.0f;
+        baseColor.z = obj.texture->pixels[idx + 2] / 255.0f;
+    }
+
     // Loop through lights
     for (int i = 0; i < scene->lightNum; i++)
     {
@@ -507,10 +532,11 @@ Vector3 shoot(Scene *scene, Vector3 rayOrigin, Vector3 rayDir, int depth)
         // Diffuse
         float diffFactor = fmaxf(0.0f, v3_dot_product(normal, lightDir));
 
-        Vector3 diffuse = {
-            obj.color.x * light.color.x * diffFactor,
-            obj.color.y * light.color.y * diffFactor,
-            obj.color.z * light.color.z * diffFactor
+        Vector3 diffuse =
+        {
+            baseColor.x * light.color.x * diffFactor,
+            baseColor.y * light.color.y * diffFactor,
+            baseColor.z * light.color.z * diffFactor
         };
 
         // Specular
@@ -520,7 +546,8 @@ Vector3 shoot(Scene *scene, Vector3 rayOrigin, Vector3 rayDir, int depth)
 
         float specFactor = powf(fmaxf(0.0f, v3_dot_product(reflectDir, viewDir)), 20.0f);
 
-        Vector3 specular = {
+        Vector3 specular =
+        {
             obj.specular.x * light.color.x * specFactor,
             obj.specular.y * light.color.y * specFactor,
             obj.specular.z * light.color.z * specFactor
